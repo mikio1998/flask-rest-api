@@ -20,6 +20,18 @@ class Users(Resource):
         data = pd.read_csv(users_path)
         data = data.to_dict()
         return {"data": data}, 200
+    
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("locationId", required=True, type=int)
+        parser.add_argument("name", required=True, type=str)
+        parser.add_argument("city", required=True, type=str)
+        args = parser.parse_args()
+        return {
+            "loc": args["locationId"],
+            "name": args["name"],
+            "city": args["city"]
+        }, 200
 
 class Locations(Resource):
     pass
