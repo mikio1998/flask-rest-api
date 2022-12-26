@@ -8,14 +8,21 @@ app = Flask(__name__)
 api = Api(app)
 
 # Endpoints
+
 # /users
+users_path = "./data/users.csv"
+
 # /locations
+locations_path = "./data/locations.csv"
 
 class Users(Resource):
-	pass
+    def get(self):
+        data = pd.read_csv(users_path)
+        data = data.to_dict()
+        return {"data": data}, 200
 
 class Locations(Resource):
-	pass
+    pass
 
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
@@ -23,4 +30,4 @@ api.add_resource(Locations, "/locations")
 
 
 if __name__ == "__main__":
-	app.run()
+    app.run(debug=True)
