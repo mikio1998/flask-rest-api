@@ -40,16 +40,9 @@ class Users(Resource):
                 "name": args["name"],
                 "city": args["city"],
                 "locations": []
-            }, ignoreIndex = True)
-            data.to_csv(users_path, indx=False) # save it to csv
-            return {"data": data.todict()}, 200 # dataframe to dict
-            
-        
-        return {
-            "loc": args["userId"],
-            "name": args["name"],
-            "city": args["city"]
-        }, 200
+            }, ignore_index = True)
+            data.to_csv(users_path, index=False) # save it to csv
+            return {"data": data.to_dict()}, 200 # dataframe to dict
 
 class Locations(Resource):
     pass
