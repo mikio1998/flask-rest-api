@@ -43,6 +43,21 @@ class Users(Resource):
             }, ignore_index = True)
             data.to_csv(users_path, index=False) # save it to csv
             return {"data": data.to_dict()}, 200 # dataframe to dict
+        
+    def delete(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("userId", required=True, type=int)
+        args = parser.parse_args()
+        
+        data = pd.read_csv(users_path)
+        
+        if args["userId"] in data["userId"]:
+            # select the rows that aren't equal to the userId specified
+            data = data[data["userId"] != args["userId"]]
+            data.to_csv(users_path, index=False)
+            return {"data": data.to_dict()}, 200
+        else: # User doesn't exist
+            return {"message": f"{args['userId']} does not exist."}, 404
 
 class Locations(Resource):
     pass
