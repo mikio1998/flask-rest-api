@@ -23,12 +23,30 @@ class Users(Resource):
     
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("locationId", required=True, type=int)
+        parser.add_argument("userId", required=True, type=int)
         parser.add_argument("name", required=True, type=str)
         parser.add_argument("city", required=True, type=str)
         args = parser.parse_args()
+        
+        # Check if user id already exists
+        data = pd.read_csv(users_path)
+        if args["userId"] in data["userId"]:
+            return {
+                "message": f"{args['userId']} already exists."
+            }, 409 #req conflict
+        else:
+            data = data.append({
+                "userId": args["userId"],
+                "name": args["name"],
+                "city": args["city"],
+                "locations": []
+            }, ignoreIndex = True)
+            data.to_csv(users_path, indx=False) # save it to csv
+            return {"data": data.todict()}, 200 # dataframe to dict
+            
+        
         return {
-            "loc": args["locationId"],
+            "loc": args["userId"],
             "name": args["name"],
             "city": args["city"]
         }, 200
