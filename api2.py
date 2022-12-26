@@ -53,7 +53,7 @@ class Users(Resource):
         
         if args["userId"] in data["userId"]:
             # select the rows that aren't equal to the userId specified
-            data = data[data["userId"] != args["userId"]]
+            data = data[data["userId"] != str(args["userId"])]
             data.to_csv(users_path, index=False)
             return {"data": data.to_dict()}, 200
         else: # User doesn't exist
@@ -69,3 +69,4 @@ api.add_resource(Locations, "/locations")
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
