@@ -65,6 +65,33 @@ class Locations(Resource):
         data = pd.read_csv(locations_path)
         data = data.to_dict()
         return {"data": data}, 200
+    
+    #post
+    def post(self):
+        # parse args
+        parser = reqparse.RequestParser()
+        parser.add_argument("locationId", required=True, type=int)
+        parser.add_argument("name", required=True, type=str)
+        parser.add_argument("rating", required=True, type=float)
+        args = parser.parse_args()
+        
+        # Check if location id already exists
+        data = pd.read_csv(locations_path)
+        if args["locationId"] in data["locationId"]:
+            return {
+                "message": f"{args['locationId']} already exists."
+        }, 409 # req conflict
+        else:
+            data = data.append({
+                "locationId": args["locationId"],
+                "name": args["name"],
+                "rating": args["rating"]
+            }, ignore_index=True)
+            data.to_csv(locations_path, index=False) # save it to csv
+            return {"data": data.to_dict()}, 200 #dataframe to dict
+            
+        
+        
 
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
