@@ -51,7 +51,7 @@ class Users(Resource):
         
         data = pd.read_csv(users_path)
         
-        if args["userId"] in data["userId"]:
+        if args["userId"] in list(data["userId"]):
             # select the rows that aren't equal to the userId specified
             data = data[data["userId"] != str(args["userId"])]
             data.to_csv(users_path, index=False)
@@ -60,7 +60,11 @@ class Users(Resource):
             return {"message": f"{args['userId']} does not exist."}, 404
 
 class Locations(Resource):
-    pass
+    #get
+    def get(self):
+        data = pd.read_csv(locations_path)
+        data = data.to_dict()
+        return {"data": data}, 200
 
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
