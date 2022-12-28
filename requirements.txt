@@ -1,0 +1,4 @@
+# Modules you use
+flask
+flask-restful
+pandas
