@@ -53,21 +53,26 @@ def data_to_dict(df):
 
 class Products(Resource):
     def get(self):
-        # arg for path
-        parser = reqparse.RequestParser()
-        parser.add_argument("vendor", required=True, type=str)
-        args = parser.parse_args()
+        # # arg for path
+        # parser = reqparse.RequestParser()
+        # parser.add_argument("vendor", required=True, type=str)
+        # args = parser.parse_args()
         
-        path = ""
+        # path = ""
         
-        if args["vendor"] == "helikon":
-            path = helikon_path
-        else:
-            return {
-                "message": f"{args['vendor']} does not exist."
-                }, 409 #req conflict
+        # if args["vendor"] == "helikon":
+        #     path = helikon_path
+        # else:
+        #     return {
+        #         "message": f"{args['vendor']} does not exist."
+        #         }, 409 #req conflict
         
-        data = pd.read_csv(path)
+        # data = pd.read_csv(path)
+        # #data = data.to_dict()
+        # data = data_to_dict(data)
+
+
+        data = pd.read_csv(helikon_path)
         #data = data.to_dict()
         data = data_to_dict(data)
             
@@ -126,8 +131,10 @@ class Users(Resource):
 class Locations(Resource):
     #get
     def get(self):
-        data = pd.read_csv(locations_path)
-        data = data.to_dict()
+        # data = pd.read_csv(locations_path)
+        data = pd.read_csv(helikon_path)
+        # data = data.to_dict()
+        data = data_to_dict(data)
         return {"data": data}, 200
     
     #post
