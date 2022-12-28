@@ -19,6 +19,9 @@ locations_path = "./data/locations.csv"
 # /helikon
 helikon_path = "./data/helikon.csv"
 
+#TODOS: create paths for csvs, make path a parameter.
+    
+
 def data_to_dict(df):
     dict = {}
     
@@ -48,16 +51,27 @@ def data_to_dict(df):
                 }]}
     return dict
 
-class Helikon(Resource):
+class Products(Resource):
     def get(self):
-        data = pd.read_csv(helikon_path)
+        # arg for path
+        parser = reqparse.RequestParser()
+        parser.add_argument("vendor", required=True, type=str)
+        args = parser.parse_args()
+        
+        path = ""
+        
+        if args["vendor"] == "helikon":
+            path = helikon_path
+        else:
+            return {
+                "message": f"{args['vendor']} does not exist."
+                }, 409 #req conflict
+        
+        data = pd.read_csv(path)
         #data = data.to_dict()
         data = data_to_dict(data)
             
         return {"data": data}, 200
-    
-    # Helper func
-    
 
 
 
@@ -146,7 +160,9 @@ class Locations(Resource):
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
-api.add_resource(Helikon, "/helikon")
+api.add_resource(Products, "/helikon")
+
+
 
 
 if __name__ == "__main__":
