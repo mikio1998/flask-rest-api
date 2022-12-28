@@ -20,41 +20,37 @@ locations_path = "./data/locations.csv"
 helikon_path = "./data/helikon.csv"
 
 def data_to_dict(df):
-    dictionary = {}
+    dict = {}
     
     for index, row in df.iterrows():
-        
         # If id exists
-        if row["Handle"] in dictionary:
-            
-            dictionary[row["Handle"]] += [{
-                    "name": row["Title"],
-                    "vendor": row["Vendor"],
-                    "price": row["Variant Price"],
+        if row["Handle"] in dict:
+            dict[row["Handle"]]["variants"] += [{
+                    "name": dict[row["Handle"]]["name"],
+                    "vendor": dict[row["Handle"]]["vendor"],
+                    "price": dict[row["Handle"]]["price"],
                     "size": row["Option2 Value"],
                     "color": row["Option1 Value"],
-                    "url": row["Image Src"]
+                    "url": row["Variant Image"]
                 }]
         else:
-            dictionary[row["Handle"]] = [{
+            dict[row["Handle"]] = {
+                "name": row["Title"],
+                "vendor": row["Vendor"],
+                "price": row["Variant Price"],
+                "variants": [{
                     "name": row["Title"],
                     "vendor": row["Vendor"],
                     "price": row["Variant Price"],
                     "size": row["Option2 Value"],
                     "color": row["Option1 Value"],
-                    "url": row["Image Src"]
-                }]
-    return dictionary
+                    "url": row["Variant Image"]
+                }]}
+    return dict
 
 class Helikon(Resource):
     def get(self):
         data = pd.read_csv(helikon_path)
-        
-        #for row in data.index:
-            #data.set_value(row, "Title", "HI!!!!")
-            #data.at[row, "Title"] = "HI!"
-            
-        
         #data = data.to_dict()
         data = data_to_dict(data)
             
