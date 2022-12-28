@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
 import ast
+#import untitled0
 
 # Initialize our flask app, init flask api.
 app = Flask(__name__)
@@ -15,10 +16,63 @@ users_path = "./data/users.csv"
 # /locations
 locations_path = "./data/locations.csv"
 
+# /helikon
+helikon_path = "./data/helikon.csv"
+
+def data_to_dict(df):
+    dictionary = {}
+    
+    for index, row in df.iterrows():
+        
+        # If id exists
+        if row["Handle"] in dictionary:
+            
+            dictionary[row["Handle"]] += [{
+                    "name": row["Title"],
+                    "vendor": row["Vendor"],
+                    "price": row["Variant Price"],
+                    "size": row["Option2 Value"],
+                    "color": row["Option1 Value"],
+                    "url": row["Image Src"]
+                }]
+        else:
+            dictionary[row["Handle"]] = [{
+                    "name": row["Title"],
+                    "vendor": row["Vendor"],
+                    "price": row["Variant Price"],
+                    "size": row["Option2 Value"],
+                    "color": row["Option1 Value"],
+                    "url": row["Image Src"]
+                }]
+    return dictionary
+
+class Helikon(Resource):
+    def get(self):
+        data = pd.read_csv(helikon_path)
+        
+        #for row in data.index:
+            #data.set_value(row, "Title", "HI!!!!")
+            #data.at[row, "Title"] = "HI!"
+            
+        
+        #data = data.to_dict()
+        data = data_to_dict(data)
+            
+        return {"data": data}, 200
+    
+    # Helper func
+    
+
+
+
+
+
 class Users(Resource):
     def get(self):
+        #data = pd.read_csv(untitled0.users_path)
         data = pd.read_csv(users_path)
         data = data.to_dict()
+        
         return {"data": data}, 200
     
     def post(self):
@@ -96,6 +150,7 @@ class Locations(Resource):
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
+api.add_resource(Helikon, "/helikon")
 
 
 if __name__ == "__main__":
