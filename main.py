@@ -19,6 +19,9 @@ locations_path = "./data/locations.csv"
 # /helikon
 helikon_path = "./data/helikon.csv"
 
+# /products
+products_path = "./data/products.csv"
+
 #TODOS: create paths for csvs, make path a parameter.
     
 
@@ -72,7 +75,8 @@ class Products(Resource):
         # data = data_to_dict(data)
 
 
-        data = pd.read_csv(helikon_path)
+        # data = pd.read_csv(helikon_path)
+        data = pd.read_csv(products_path)
         #data = data.to_dict()
         data = data_to_dict(data)
             
@@ -167,7 +171,7 @@ class Locations(Resource):
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
-api.add_resource(Products, "/helikon")
+api.add_resource(Products, "/products")
 
 
 
