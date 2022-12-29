@@ -29,14 +29,26 @@ def data_to_dict(df):
     dict = {}
     
     for index, row in df.iterrows():
+        color = "NAN"
+        if row["Option1 Name"] == "Color":
+            color = row["Option1 Value"]
+        elif row["Option2 Name"] == "Color":
+            color = row["Option2 Value"]
+            
+        size = "NAN"
+        if row["Option1 Name"] == "Size":
+            size = row["Option1 Value"]
+        elif row["Option2 Name"] == "Size":
+            size = row["Option2 Value"]
+        
         # If id exists
         if row["Handle"] in dict:
             dict[row["Handle"]]["variants"] += [{
                     "name": dict[row["Handle"]]["name"],
                     "vendor": dict[row["Handle"]]["vendor"],
                     "price": dict[row["Handle"]]["price"],
-                    "size": row["Option2 Value"],
-                    "color": row["Option1 Value"],
+                    "size": size,
+                    "color": color,
                     "url": row["Variant Image"]
                 }]
         else:
@@ -48,8 +60,8 @@ def data_to_dict(df):
                     "name": row["Title"],
                     "vendor": row["Vendor"],
                     "price": row["Variant Price"],
-                    "size": row["Option2 Value"],
-                    "color": row["Option1 Value"],
+                    "size": size,
+                    "color": color,
                     "url": row["Variant Image"]
                 }]}
     return dict
@@ -77,7 +89,6 @@ class Products(Resource):
 
         # data = pd.read_csv(helikon_path)
         data = pd.read_csv(products_path)
-        #data = data.to_dict()
         data = data_to_dict(data)
             
         return {"data": data}, 200
