@@ -25,13 +25,13 @@ def data_to_dict(df):
     dict = {}
     
     for index, row in df.iterrows():
-        color = "NAN"
+        color = float("NaN")
         if row["Option1 Name"] == "Color":
             color = row["Option1 Value"]
         elif row["Option2 Name"] == "Color":
             color = row["Option2 Value"]
             
-        size = "NAN"
+        size = float("NaN")
         if row["Option1 Name"] == "Size":
             size = row["Option1 Value"]
         elif row["Option2 Name"] == "Size":
