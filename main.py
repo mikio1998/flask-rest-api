@@ -2,7 +2,6 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
 import ast
-#import untitled0
 
 # Initialize our flask app, init flask api.
 app = Flask(__name__)
@@ -21,9 +20,6 @@ helikon_path = "./data/helikon.csv"
 
 # /products
 products_path = "./data/products.csv"
-
-#TODOS: create paths for csvs, make path a parameter.
-    
 
 def data_to_dict(df):
     dict = {}
@@ -68,26 +64,6 @@ def data_to_dict(df):
 
 class Products(Resource):
     def get(self):
-        # # arg for path
-        # parser = reqparse.RequestParser()
-        # parser.add_argument("vendor", required=True, type=str)
-        # args = parser.parse_args()
-        
-        # path = ""
-        
-        # if args["vendor"] == "helikon":
-        #     path = helikon_path
-        # else:
-        #     return {
-        #         "message": f"{args['vendor']} does not exist."
-        #         }, 409 #req conflict
-        
-        # data = pd.read_csv(path)
-        # #data = data.to_dict()
-        # data = data_to_dict(data)
-
-
-        # data = pd.read_csv(helikon_path)
         data = pd.read_csv(products_path)
         data = data_to_dict(data)
             
@@ -99,7 +75,6 @@ class Products(Resource):
 
 class Users(Resource):
     def get(self):
-        #data = pd.read_csv(untitled0.users_path)
         data = pd.read_csv(users_path)
         data = data.to_dict()
         
