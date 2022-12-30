@@ -21,6 +21,19 @@ helikon_path = "./data/helikon.csv"
 # /products
 products_path = "./data/products.csv"
 
+@app.route("/products", methods=["GET"])
+def get_product():
+    parser = reqparse.RequestParser()
+    parser.add_argument("handle", required=True, type=str)
+    parser.add_argument("handle", required=True, type=str)
+    args = parser.parse_args()
+    
+    data = pd.read_csv(products_path, keep_default_na=False)
+    data = data_to_dict(data, args["vendor"])
+            
+    return {"data": data}, 200
+
+
 def data_to_dict(df, vendor):
     dict = {}
     
@@ -69,18 +82,16 @@ def data_to_dict(df, vendor):
                 }]}
     return dict
 
-class Products(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("vendor", required=True, type=str)
-        args = parser.parse_args()
+# class Products(Resource):
+#     def get(self):
+#         parser = reqparse.RequestParser()
+#         parser.add_argument("vendor", required=True, type=str)
+#         args = parser.parse_args()
         
-        data = pd.read_csv(products_path, keep_default_na=False)
-        data = data_to_dict(data, args["vendor"])
+#         data = pd.read_csv(products_path, keep_default_na=False)
+#         data = data_to_dict(data, args["vendor"])
             
-        return {"data": data}, 200
-
-
+#         return {"data": data}, 200
 
 
 
