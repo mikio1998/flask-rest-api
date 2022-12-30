@@ -21,67 +21,6 @@ helikon_path = "./data/helikon.csv"
 # /products
 products_path = "./data/products.csv"
 
-# @app.route("/products", methods=["GET"])
-# def get_product():
-#     parser = reqparse.RequestParser()
-#     parser.add_argument("handle", required=True, type=str)
-#     parser.add_argument("handle", required=True, type=str)
-#     args = parser.parse_args()
-    
-#     data = pd.read_csv(products_path, keep_default_na=False)
-#     data = data_to_dict(data, args["vendor"])
-            
-#     return {"data": data}, 200
-
-
-# def data_to_dict(df, vendor):
-#     dict = {}
-    
-#     for index, row in df.iterrows():
-#         if row["Vendor"] != vendor:
-#             continue
-        
-#         color = None
-#         if row["Option1 Name"] == "Color":
-#             color = row["Option1 Value"]
-#         elif row["Option2 Name"] == "Color":
-#             color = row["Option2 Value"]
-            
-#         size = None
-#         if row["Option1 Name"] == "Size":
-#             size = row["Option1 Value"]
-#         elif row["Option2 Name"] == "Size":
-#             size = row["Option2 Value"]
-            
-#         url = row["Variant Image"]
-#         if url == "":
-#             url = None
-        
-#         # If id exists
-#         if row["Handle"] in dict:
-#             dict[row["Handle"]]["variants"] += [{
-#                     "name": dict[row["Handle"]]["name"],
-#                     "vendor": dict[row["Handle"]]["vendor"],
-#                     "price": dict[row["Handle"]]["price"],
-#                     "size": size,
-#                     "color": color,
-#                     "url": url
-#                 }]
-#         else:
-#             dict[row["Handle"]] = {
-#                 "name": row["Title"],
-#                 "vendor": row["Vendor"],
-#                 "price": row["Variant Price"],
-#                 "variants": [{
-#                     "name": row["Title"],
-#                     "vendor": row["Vendor"],
-#                     "price": row["Variant Price"],
-#                     "size": size,
-#                     "color": color,
-#                     "url": url
-#                 }]}
-#     return dict
-
 def data_to_dict(df, vendor):
     dict = {}
     
@@ -142,6 +81,10 @@ class ProductsList(Resource):
 
 class Product(Resource):
     def get(self, handle):
+        # parser = reqparse.RequestParser()
+        # parser.add_argument("handle", required=True, type=str)
+        # args = parser.parse_args()
+        
         data = pd.read_csv(products_path, keep_default_na=False)
         
         # Find product
@@ -150,6 +93,7 @@ class Product(Resource):
                 obj = row_to_object(row)
                 return obj
         return 
+
 
 
 
@@ -237,7 +181,7 @@ class Locations(Resource):
 # Map class Users, to address /users
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
-api.add_resource(ProductsList, "/products")
+api.add_resource(ProductsList, "/productslist")
 api.add_resource(Product, "/products/<handle>")
 
 
