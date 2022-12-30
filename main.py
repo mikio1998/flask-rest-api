@@ -21,10 +21,13 @@ helikon_path = "./data/helikon.csv"
 # /products
 products_path = "./data/products.csv"
 
-def data_to_dict(df):
+def data_to_dict(df, vendor):
     dict = {}
     
     for index, row in df.iterrows():
+        if row["Vendor"] != vendor:
+            continue
+        
         color = None
         if row["Option1 Name"] == "Color":
             color = row["Option1 Value"]
@@ -68,8 +71,12 @@ def data_to_dict(df):
 
 class Products(Resource):
     def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("vendor", required=True, type=str)
+        args = parser.parse_args()
+        
         data = pd.read_csv(products_path, keep_default_na=False)
-        data = data_to_dict(data)
+        data = data_to_dict(data, args["vendor"])
             
         return {"data": data}, 200
 
