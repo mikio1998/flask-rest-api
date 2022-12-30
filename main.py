@@ -25,19 +25,21 @@ def data_to_dict(df):
     dict = {}
     
     for index, row in df.iterrows():
-        # color = float("NaN")
         color = None
         if row["Option1 Name"] == "Color":
             color = row["Option1 Value"]
         elif row["Option2 Name"] == "Color":
             color = row["Option2 Value"]
             
-        # size = float("NaN")
         size = None
         if row["Option1 Name"] == "Size":
             size = row["Option1 Value"]
         elif row["Option2 Name"] == "Size":
             size = row["Option2 Value"]
+            
+        url = row["Variant Image"]
+        if url == "":
+            url = None
         
         # If id exists
         if row["Handle"] in dict:
@@ -47,7 +49,7 @@ def data_to_dict(df):
                     "price": dict[row["Handle"]]["price"],
                     "size": size,
                     "color": color,
-                    "url": row["Variant Image"]
+                    "url": url
                 }]
         else:
             dict[row["Handle"]] = {
@@ -60,13 +62,13 @@ def data_to_dict(df):
                     "price": row["Variant Price"],
                     "size": size,
                     "color": color,
-                    "url": row["Variant Image"]
+                    "url": url
                 }]}
     return dict
 
 class Products(Resource):
     def get(self):
-        data = pd.read_csv(products_path)
+        data = pd.read_csv(products_path, keep_default_na=False)
         data = data_to_dict(data)
             
         return {"data": data}, 200
