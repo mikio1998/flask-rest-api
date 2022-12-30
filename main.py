@@ -80,19 +80,22 @@ class ProductsList(Resource):
         return {"data": data}, 200
 
 class Product(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("handle", required=True, type=str)
-        args = parser.parse_args()
+    def get(self, handle):
+        # parser = reqparse.RequestParser()
+        # parser.add_argument("handle", required=True, type=str)
+        # args = parser.parse_args()
         
         data = pd.read_csv(products_path, keep_default_na=False)
         
         # Find product
         for index, row in data.iterrows():
-            if row["Handle"] == args["handle"]:
+            if row["Handle"] == handle:
                 obj = row_to_object(row)
-                return obj
-        return 
+                # return {"data": obj}, 200
+                return obj, 200
+        return {
+                "message": f"{handle} does not exists."
+            }, 409 #req conflict 
 
 
 
@@ -182,7 +185,7 @@ class Locations(Resource):
 api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
 api.add_resource(ProductsList, "/productslist")
-api.add_resource(Product, "/product")
+api.add_resource(Product, "/product/<handle>")
 
 
 
