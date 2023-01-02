@@ -69,6 +69,8 @@ def decode_products_data(df, vendor=None):
         
         # If id exists
         if row["Handle"] in dict:
+            obj["name"] = dict[row["Handle"]][0]["name"]
+            obj["vendor"] = dict[row["Handle"]][0]["vendor"]
             dict[row["Handle"]] += [obj]
         else:
             dict[row["Handle"]] = [obj]
