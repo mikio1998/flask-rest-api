@@ -39,7 +39,8 @@ class ProductsList(Resource):
 class SoldProductsList(Resource):
     def get(self):
         data = pd.read_csv(sold_products_path, keep_default_na=False)
-        data = helper.decode_products_data(data)
+        # data = helper.decode_products_data(data)
+        data = helper.decode_sold_products_data(data)
             
         return {"data": data}, 200
     # TODO: Create data_to_dict for sold produts (cus u need quantity)
