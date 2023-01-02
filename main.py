@@ -87,7 +87,7 @@ class Product(Resource):
 # Map Resource classes, to addresses /
 api.add_resource(ProductsList, "/productslist")
 api.add_resource(Product, "/product/<handle>")
-api.add_resource(SoldProductsList, "/soldproductslist")
+api.add_resource(SoldProductsList, "/soldproducts")
 
 if __name__ == "__main__":
     app.run(debug=True)
