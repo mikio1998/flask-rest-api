@@ -9,14 +9,10 @@ from collections import defaultdict
 
 def decode_sold_products_data(df):
     dict = defaultdict(lambda: [])
-    
     for index, row in df.iterrows():
-        
         obj = sold_prod_row_to_object(row)
-        
         if row["Handle"] in dict:
             found = False
-            
             for i in range(len(dict[row["Handle"]])): #for each variant
                 item = dict[row["Handle"]][i]
                 if item['size'] == obj["size"] and item['color'] == obj["color"]:
@@ -61,7 +57,6 @@ def sold_prod_row_to_object(row):
 
 
     
-
 # def data_to_dict(df, vendor):
 def decode_products_data(df, vendor=None):
     dict = {}
