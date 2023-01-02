@@ -21,11 +21,16 @@ helikon_path = "./data/helikon.csv"
 # /products
 products_path = "./data/products.csv"
 
-def data_to_dict(df, vendor):
+# /sold
+sold_products_path = "./data/sold.csv"
+
+# def data_to_dict(df, vendor):
+def data_to_dict(df, vendor=None):
     dict = {}
     
     for index, row in df.iterrows():
-        if row["Vendor"] != vendor:
+        
+        if vendor != None and row["Vendor"] != vendor:
             continue
         
         obj = row_to_object(row)
@@ -79,12 +84,15 @@ class ProductsList(Resource):
             
         return {"data": data}, 200
 
+class SoldProductsList(Resource):
+    def get(self):
+        data = pd.read_csv(sold_products_path, keep_default_na=False)
+        data = data_to_dict(data)
+            
+        return {"data": data}, 200
+
 class Product(Resource):
     def get(self, handle):
-        # parser = reqparse.RequestParser()
-        # parser.add_argument("handle", required=True, type=str)
-        # args = parser.parse_args()
-        
         data = pd.read_csv(products_path, keep_default_na=False)
         
         # Find product
@@ -186,6 +194,7 @@ api.add_resource(Users, "/users")
 api.add_resource(Locations, "/locations")
 api.add_resource(ProductsList, "/productslist")
 api.add_resource(Product, "/product/<handle>")
+api.add_resource(SoldProductsList, "/soldproductslist")
 
 
 
