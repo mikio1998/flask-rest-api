@@ -39,12 +39,39 @@ class ProductsList(Resource):
 class SoldProductsList(Resource):
     def get(self):
         data = pd.read_csv(sold_products_path, keep_default_na=False)
-        # data = helper.decode_products_data(data)
         data = helper.decode_sold_products_data(data)
             
         return {"data": data}, 200
     # TODO: Create data_to_dict for sold produts (cus u need quantity)
     # Create post func for sold prod
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("handle", required=True, type=str)
+        parser.add_argument("name", required=True, type=str)
+        parser.add_argument("vendor", required=True, type=str)
+        parser.add_argument("price", required=True, type=str)
+        parser.add_argument("size", required=True, type=str)
+        parser.add_argument("color", required=True, type=str)
+        parser.add_argument("url", required=True, type=str)
+        parser.add_argument("quantity", required=True, type=int)
+        args = parser.parse_args()
+        data = pd.read_csv(sold_products_path)
+        
+        data = data.append({
+            "Handle": args["handle"],
+            "Title": args["name"],
+            "Vendor": args["vendor"],
+            "Option1 Name": "Color",
+            "Option1 Value": args["color"],
+            "Option2 Name": "Size",
+            "Option2 Value": args["size"],
+            "Variant Price": args["price"],
+            "Variant Image": args["url"],
+            "Quantity": args["quantity"]
+        }, ignore_index=True)
+        data.to_csv(sold_products_path, index=False) # save it to csv
+        return {"data": helper.decode_sold_products_data(data)}, 200 #dataframe to dict
+        
     
 
 class Product(Resource):

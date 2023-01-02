@@ -21,7 +21,6 @@ def decode_sold_products_data(df):
                     dict.update({row["Handle"]: new})
                     found = True
                     break
-                
             if found == False:
                 dict[row["Handle"]] += [obj]
         else:
