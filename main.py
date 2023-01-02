@@ -20,7 +20,8 @@ locations_path = "./data/locations.csv"
 helikon_path = "./data/helikon.csv"
 
 # /products
-products_path = "./data/products.csv"
+# products_path = "./data/products.csv"
+products_path = "./data/helikon.csv"
 
 # /sold
 sold_products_path = "./data/sold.csv"
@@ -36,6 +37,7 @@ class ProductsList(Resource):
             
         return {"data": data}, 200
 
+# Sold Products backend handled with Firestore.
 class SoldProductsList(Resource):
     def get(self):
         data = pd.read_csv(sold_products_path, keep_default_na=False)
@@ -69,6 +71,29 @@ class SoldProductsList(Resource):
         }, ignore_index=True)
         data.to_csv(sold_products_path, index=False) # save it to csv
         return {"data": helper.decode_sold_products_data(data)}, 200 #dataframe to dict
+    
+    def delete(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("handle", required=True, type=str)
+        parser.add_argument("size", required=True, type=str)
+        parser.add_argument("color", required=True, type=str)
+        args = parser.parse_args()
+        
+        data = pd.read_csv(sold_products_path)
+        
+        # Find t
+        
+        if args["handle"] in list(data["Handle"]):
+            
+            # select the rows that aren't equal to the handle specified
+            data = data[data["userId"] != str(args["userId"])]
+            
+            #
+            data.to_csv(users_path, index=False)
+            return {"data": data.to_dict()}, 200
+        else: # User doesn't exist
+            return {"message": f"{args['userId']} does not exist."}, 404
+        
         
 class Product(Resource):
     def get(self, handle):

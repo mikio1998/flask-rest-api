@@ -76,15 +76,15 @@ def decode_products_data(df, vendor=None):
 
 def row_to_object(row):
     color = None
-    if row["Option1 Name"] == "Color":
+    if row["Option1 Name"] == "color":
         color = row["Option1 Value"]
-    elif row["Option2 Name"] == "Color":
+    elif row["Option2 Name"] == "color":
         color = row["Option2 Value"]
         
     size = None
-    if row["Option1 Name"] == "Size":
+    if row["Option1 Name"] == "size":
         size = row["Option1 Value"]
-    elif row["Option2 Name"] == "Size":
+    elif row["Option2 Name"] == "size":
         size = row["Option2 Value"]
         
     url = row["Variant Image"]
