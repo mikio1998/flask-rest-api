@@ -32,18 +32,18 @@ class ProductsList(Resource):
         args = parser.parse_args()
         
         data = pd.read_csv(products_path, keep_default_na=False)
-        data = helper.data_to_dict(data, args["vendor"])
+        data = helper.decode_products_data(data, args["vendor"])
             
         return {"data": data}, 200
 
 class SoldProductsList(Resource):
     def get(self):
         data = pd.read_csv(sold_products_path, keep_default_na=False)
-        data = helper.data_to_dict(data)
+        data = helper.decode_products_data(data)
             
         return {"data": data}, 200
-    
-    
+    # TODO: Create data_to_dict for sold produts (cus u need quantity)
+    # Create post func for sold prod
     
 
 class Product(Resource):

@@ -6,8 +6,12 @@ Created on Wed Dec 28 18:34:36 2022
 @author: mikionakata
 """
 
+# def decode_sold_products_data(df):
+    
+    
+
 # def data_to_dict(df, vendor):
-def data_to_dict(df, vendor=None):
+def decode_products_data(df, vendor=None):
     dict = {}
     
     for index, row in df.iterrows():
@@ -21,7 +25,7 @@ def data_to_dict(df, vendor=None):
         if row["Handle"] in dict:
             dict[row["Handle"]]["variants"] += [obj]
         else:
-            dict[row["Handle"]] = obj
+            dict[row["Handle"]] = [obj]
     return dict
 
 def row_to_object(row):
@@ -40,16 +44,25 @@ def row_to_object(row):
     url = row["Variant Image"]
     if url == "":
         url = None
-    
+        
     return {
         "name": row["Title"],
         "vendor": row["Vendor"],
         "price": row["Variant Price"],
-        "variants": [{
-            "name": row["Title"],
-            "vendor": row["Vendor"],
-            "price": row["Variant Price"],
-            "size": size,
-            "color": color,
-            "url": url
-        }]}
+        "size": size,
+        "color": color,
+        "url": url
+    }
+
+    # return {
+    #     "name": row["Title"],
+    #     "vendor": row["Vendor"],
+    #     "price": row["Variant Price"],
+    #     "variants": [{
+    #         "name": row["Title"],
+    #         "vendor": row["Vendor"],
+    #         "price": row["Variant Price"],
+    #         "size": size,
+    #         "color": color,
+    #         "url": url
+    #     }]}
