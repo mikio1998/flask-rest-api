@@ -28,7 +28,7 @@ sold_products_path = "./data/sold.csv"
 class ProductsList(Resource):
     def get(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("vendor", required=True, type=str)
+        parser.add_argument("vendor", required=False, type=str)
         args = parser.parse_args()
         
         data = pd.read_csv(products_path, keep_default_na=False)
