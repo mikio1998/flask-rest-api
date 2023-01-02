@@ -40,10 +40,8 @@ class SoldProductsList(Resource):
     def get(self):
         data = pd.read_csv(sold_products_path, keep_default_na=False)
         data = helper.decode_sold_products_data(data)
-            
         return {"data": data}, 200
-    # TODO: Create data_to_dict for sold produts (cus u need quantity)
-    # Create post func for sold prod
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("handle", required=True, type=str)
@@ -72,8 +70,6 @@ class SoldProductsList(Resource):
         data.to_csv(sold_products_path, index=False) # save it to csv
         return {"data": helper.decode_sold_products_data(data)}, 200 #dataframe to dict
         
-    
-
 class Product(Resource):
     def get(self, handle):
         data = pd.read_csv(products_path, keep_default_na=False)
@@ -88,14 +84,10 @@ class Product(Resource):
                 "message": f"{handle} does not exists."
             }, 409 #req conflict 
 
-
-# Map class Users, to address /users
+# Map Resource classes, to addresses /
 api.add_resource(ProductsList, "/productslist")
 api.add_resource(Product, "/product/<handle>")
 api.add_resource(SoldProductsList, "/soldproductslist")
-
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
