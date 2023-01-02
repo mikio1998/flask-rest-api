@@ -5,18 +5,31 @@ Created on Wed Dec 28 18:34:36 2022
 
 @author: mikionakata
 """
+from collections import defaultdict
 
 def decode_sold_products_data(df):
-    dict = {}
+    dict = defaultdict(lambda: [])
     
     for index, row in df.iterrows():
         
         obj = sold_prod_row_to_object(row)
         
         if row["Handle"] in dict:
-            row["Handle"]["variants"] += [obj]
+            found = False
+            
+            for i in range(len(dict[row["Handle"]])): #for each variant
+                item = dict[row["Handle"]][i]
+                if item['size'] == obj["size"] and item['color'] == obj["color"]:
+                    new = dict[row["Handle"]]
+                    new[i]["quantity"] = dict[row["Handle"]][i]["quantity"] + obj["quantity"]
+                    dict.update({row["Handle"]: new})
+                    found = True
+                    break
+                
+            if found == False:
+                dict[row["Handle"]] += [obj]
         else:
-            dict[row["Handle"]] = [obj]
+            dict[row["Handle"]] += [obj]
     return dict
 
 def sold_prod_row_to_object(row):
