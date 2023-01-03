@@ -99,7 +99,8 @@ def row_to_object(row):
         "price": row["Variant Price"],
         "size": size,
         "color": color,
-        "url": url
+        "url": url,
+        "sku": row["Variant SKU"]
     }
 
     # return {

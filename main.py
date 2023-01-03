@@ -26,6 +26,9 @@ products_path = "./data/helikon.csv"
 # /sold
 sold_products_path = "./data/sold.csv"
 
+# /barcode
+barcode_path = "./data/barcode.csv"
+
 class ProductsList(Resource):
     def get(self):
         parser = reqparse.RequestParser()
@@ -108,11 +111,30 @@ class Product(Resource):
         return {
                 "message": f"{handle} does not exists."
             }, 409 #req conflict 
+    
+class Barcode(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("barcode", required=True, type=str)
+        args = parser.parse_args()
+        
+        data = pd.read_csv(barcode_path)
+        
+
+        for index, row in data.iterrows():
+            if row["Barcode"] == args["barcode"]:
+                res = {row["Product Handle"]: row["Barcode"]}
+                return {"data": res}, 200
+        return {
+                "message": f"{args['barcode']} does not exists."
+            }, 409 #req conflict  
+
 
 # Map Resource classes, to addresses /
 api.add_resource(ProductsList, "/productslist")
 api.add_resource(Product, "/product/<handle>")
 api.add_resource(SoldProductsList, "/soldproducts")
+api.add_resource(Barcode, "/barcode")
 
 if __name__ == "__main__":
     app.run(debug=True)
