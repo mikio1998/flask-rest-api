@@ -103,15 +103,20 @@ def row_to_object(row):
         "sku": row["Variant SKU"]
     }
 
-    # return {
-    #     "name": row["Title"],
-    #     "vendor": row["Vendor"],
-    #     "price": row["Variant Price"],
-    #     "variants": [{
-    #         "name": row["Title"],
-    #         "vendor": row["Vendor"],
-    #         "price": row["Variant Price"],
-    #         "size": size,
-    #         "color": color,
-    #         "url": url
-    #     }]}
+def get_variants(df, handle):
+    dict = {handle: []}
+    for index, row in df.iterrows():
+        if row["Handle"] == handle:
+            obj = row_to_object(row)
+            if len(dict[handle]) != 0:
+                obj["name"] = dict[handle][0]["name"]
+            dict[handle] += [obj]
+    return dict
+    
+    
+    
+    
+    
+    
+    
+    

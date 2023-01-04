@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, abort
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
 import ast
@@ -30,13 +30,9 @@ sold_products_path = "./data/sold.csv"
 barcode_path = "./data/barcode.csv"
 
 class ProductsList(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("vendor", required=False, type=str)
-        args = parser.parse_args()
-        
+    def get(self, vendor):        
         data = pd.read_csv(products_path, keep_default_na=False)
-        data = helper.decode_products_data(data, args["vendor"])
+        data = helper.decode_products_data(data, vendor)
             
         return {"data": data}, 200
 
@@ -106,35 +102,47 @@ class Product(Resource):
         for index, row in data.iterrows():
             if row["Handle"] == handle:
                 obj = helper.row_to_object(row)
-                # return {"data": obj}, 200
                 return obj, 200
         return {
                 "message": f"{handle} does not exists."
             }, 409 #req conflict 
     
 class Barcode(Resource):
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("barcode", required=True, type=str)
-        args = parser.parse_args()
+    def get(self, barcode):
+        # parser = reqparse.RequestParser()
+        # parser.add_argument("barcode", required=True, type=str)
+        # args = parser.parse_args()
         
         data = pd.read_csv(barcode_path)
         
-
+        # Find the handle for the barcode.
+        handle = None
         for index, row in data.iterrows():
-            if row["Barcode"] == args["barcode"]:
-                res = {row["Product Handle"]: row["Barcode"]}
-                return {"data": res}, 200
-        return {
-                "message": f"{args['barcode']} does not exists."
+            if row["Barcode"] == barcode:
+                handle = row["Product Handle"]
+                break 
+
+        if handle == None:
+            return {
+                "message": f"{barcode} does not exists."
             }, 409 #req conflict  
+        
+        # Next, match the handle with a product.
+        prodData = pd.read_csv(products_path)
+        res = helper.get_variants(prodData, handle)
+        if len(res[handle]) == 0:
+            return {
+                "message": f"{barcode} does not exists."
+            }, 409 #req conflict  
+        else:
+            return {"data": res}, 200
 
 
 # Map Resource classes, to addresses /
-api.add_resource(ProductsList, "/productslist")
+api.add_resource(ProductsList, "/productslist/<vendor>")
 api.add_resource(Product, "/product/<handle>")
 api.add_resource(SoldProductsList, "/soldproducts")
-api.add_resource(Barcode, "/barcode")
+api.add_resource(Barcode, "/barcode/<barcode>")
 
 if __name__ == "__main__":
     app.run(debug=True)

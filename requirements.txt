@@ -1,4 +1,5 @@
 # Modules you use
 flask
 flask-restful
+marshmallow
 pandas
